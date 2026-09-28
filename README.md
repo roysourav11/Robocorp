@@ -1,56 +1,59 @@
-# Template: Python - Minimal
+# Robocorp Order Automation
 
-This template leverages the new [Python framework](https://github.com/robocorp/robocorp), the [libraries](https://github.com/robocorp/robocorp/blob/master/README.md#packages) from to same project as well.
+This project automates ordering robots from RobotSpareBin Industries using Robocorp and Playwright.
 
-The template provides you with the basic structure of a Python project: logging out of the box and controlling your tasks without fiddling with the base Python stuff. The environment contains the most used libraries, so you do not have to start thinking about those right away.
+It reads order data from `orders.csv`, fills the robot order form, handles the consent popup, submits each order, saves the receipt PDF, and zips the generated output files.
 
-👉 Other templates are available as well via our tooling and on our [Portal](https://robocorp.com/portal/tag/template)
+## What this bot does
 
-## Running
+- Opens the RobotSpareBin order page
+- Downloads and refreshes the latest order list
+- Fills the form for each row in the CSV
+- Handles the popup dialog when it appears
+- Submits each order and waits for the receipt
+- Saves receipt PDFs into the output folder
+- Packages receipts into a ZIP archive
 
-### VS Code
+## Project files
 
-1. Get [Sema4.ai SDK](https://sema4.ai/docs/automation/visual-studio-code/extension-features) -extension for VS Code.
-2. You'll get an easy-to-use side panel and powerful command-palette commands for running, debugging, code completion, docs, etc.
+- [tasks.py](tasks.py) — main automation logic
+- [robot.yaml](robot.yaml) — Robocorp task configuration
+- [conda.yaml](conda.yaml) — Python and dependency environment
+- [orders.csv](orders.csv) — order data source
+- [output/](output/) — generated runtime artifacts such as PDFs and logs
 
-## Results
+## Prerequisites
 
-🚀 After running the bot, check out the `log.html` under the `output` -folder.
+- Python environment managed through Robocorp/Conda
+- Robocorp task runner or VS Code with the relevant tooling
+- Browser support for the configured browser engine
 
-## Dependencies
+## Run the task
 
-We strongly recommend getting familiar with adding your dependencies in [conda.yaml](conda.yaml) to control your Python dependencies and the whole Python environment for your automation.
+From the project folder:
 
-<details>
-  <summary>🙋‍♂️ "Why not just pip install...?"</summary>
+```bash
+python -m robocorp.tasks run tasks.py
+```
 
-Think of [conda.yaml](conda.yaml) as an equivalent of the requirements.txt, but much better. 👩‍💻 With `conda.yaml`, you are not just controlling your PyPI dependencies; you control the complete Python environment, which makes things repeatable and easy.
+Or in VS Code, run the task configured in [robot.yaml](robot.yaml).
 
-👉 You will probably need to run your code on another machine quite soon, so by using `conda.yaml`:
+## Output
 
-- You can avoid `Works on my machine` -cases
-- You do not need to manage Python installations on all the machines
-- You can control exactly which version of Python your automation will run on
-  - You'll also control the pip version to avoid dep. resolution changes
-- No need for venv, pyenv, ... tooling and knowledge sharing inside your team.
-- Define dependencies in conda.yaml, let our tooling do the heavy lifting.
-- You get all the content of [conda-forge](https://prefix.dev/channels/conda-forge) without any extra tooling
+After the task finishes, check the generated files in the output folder, especially:
 
-> Dive deeper with [these](https://github.com/robocorp/rcc/blob/master/docs/recipes.md#what-is-in-condayaml) resources.
+- `output/log.html`
+- `output/Reciept/`
+- `output/Reciept.zip`
 
-</details>
-<br/>
+## Notes
 
-> The full power of [rpaframework](https://robocorp.com/docs/python/rpa-framework) -libraries is also available on Python as a backup while we implement the new Python libraries.
+- The automation includes a popup guard to avoid failing when the consent dialog is hidden instead of visible.
+- The order CSV is refreshed before processing so the latest data is used for each run.
+- The project is configured to work with the Robocorp browser layer and the managed Python environment.
 
-## What now?
+## Related resources
 
-🚀 Now, go get'em
-
-Start writing Python and remember that the AI/LLM's out there are getting really good and creating Python code specifically.
-
-For more information, do not forget to check out the following:
-
-- [Robocorp Documentation -site](https://robocorp.com/docs)
-- [Portal for more examples](https://robocorp.com/portal)
-- Follow our main [robocorp -repository](https://github.com/robocorp/robocorp) as it is the main location where we developed the libraries and the framework.
+- [Robocorp Documentation](https://robocorp.com/docs)
+- [Robocorp GitHub](https://github.com/robocorp/robocorp)
+- [Playwright](https://playwright.dev/)
